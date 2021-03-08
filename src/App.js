@@ -3,9 +3,9 @@ import {ChessBoard} from './components/ChessBoard'
 
 function App() {
   return (
-    <React.Fragment>
+    <div className="App">
       <ChessBoard />
-    </React.Fragment>
+    </div>
   );
 }
 
