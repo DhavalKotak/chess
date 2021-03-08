@@ -3,11 +3,12 @@ body{
   display: grid;
   place-content: center;
   height: 100vh;
+  background-color: #272522;
 }
 
 .board{
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(8 ,100px);
   width: 800px;
   height: 800px;
   background-color: #4b7399;
@@ -15,7 +16,4 @@ body{
 .tile{
   width: 100px;
   height: 100px;
-}
-.App{
-  background-color: #272522;
 }
