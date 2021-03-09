@@ -5,15 +5,16 @@ body{
   height: 100vh;
   background-color: #272522;
 }
-
 .board{
   display: grid;
   grid-template-columns: repeat(8 ,100px);
+  grid-template-rows: repeat(8, 100px);
   width: 800px;
   height: 800px;
-  background-color: #4b7399;
 }
-.tile{
-  width: 100px;
-  height: 100px;
+.white-tiles{
+  background-color: beige;
+}
+.black-tiles{
+  background-color: #4b7399;
 }
