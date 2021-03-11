@@ -12,8 +12,12 @@ body{
   width: 800px;
   height: 800px;
 }
+.tile{
+  display: grid;
+  place-content: center;
+}
 .white-tiles{
-  background-color: beige;
+  background-color: #60dafa;
 }
 .black-tiles{
   background-color: #4b7399;

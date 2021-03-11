@@ -1,11 +1,9 @@
+import React from 'react'
 import '../../index.css'
 
-const Tile = (props) => {
+export const Tile = (props) => {
     if(props.number % 2 === 0)
-        return <div className="black-tiles"></div>
+        return <div className="tile black-tiles"><img src={props.image} alt=""/></div>
     else
-        return <div className="white-tiles"></div>
-    
-        
+        return <div className="tile white-tiles"><img src={props.image} alt=""/></div>
 }
-export default Tile
