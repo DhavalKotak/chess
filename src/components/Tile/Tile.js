@@ -3,7 +3,15 @@ import '../../index.css'
 
 export const Tile = (props) => {
     if(props.number % 2 === 0)
-        return <div className="tile black-tiles"><img src={props.image} alt=""/></div>
+        return (
+            <div className="tile black-tiles">
+                {props.image && <div style={{backgroundImage: `url(${props.image})`}} className="piece"></div>}
+            </div>
+        )
     else
-        return <div className="tile white-tiles"><img src={props.image} alt=""/></div>
+        return (
+            <div className="tile white-tiles">
+                {props.image && <div style={{backgroundImage: `url(${props.image})`}} className="piece"></div>}
+            </div>
+        )
 }

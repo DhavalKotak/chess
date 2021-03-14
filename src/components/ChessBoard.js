@@ -4,12 +4,6 @@ import { Tile } from './Tile/Tile'
 const xAxis = ["a","b","c","d","e","f","g","h"]
 const yAxis = ["1","2","3","4","5","6","7","8"]
 
-// let piece = {
-//     image : "",
-//     x : 0,
-//     y : 0
-// }
-
 const pieces = []
 
 for(let i = 0; i < 9; i++)
@@ -29,6 +23,34 @@ for(let i = 0; i < 2; i++){
     pieces.push({image: `img/${color}-rook.png`, x: 0, y: y})
 }
 
+let currentPiece = null
+
+const selectPiece = e => {
+    if(e.target.classList.contains("piece")){
+        const x = e.clientX - 50
+        const y = e.clientY - 50
+        e.target.style.position = "absolute"
+        e.target.style.top = `${y}px`
+        e.target.style.left = `${x}px`
+    }
+    currentPiece = e.target
+}
+
+const movePeice = e => {
+    if(currentPiece){
+        const x = e.clientX - 50
+        const y = e.clientY - 50
+        currentPiece.style.position = "absolute"
+        currentPiece.style.top = `${y}px`
+        currentPiece.style.left = `${x}px`
+    }
+}
+
+const releasePiece = e => {
+    if(currentPiece)
+        currentPiece = null
+}
+
 export const ChessBoard = () => {
     const board = []
     for(let j = yAxis.length - 1;j >= 0; j--){
@@ -44,7 +66,7 @@ export const ChessBoard = () => {
     }
     
     return(
-        <div className="board">
+        <div className="board" onMouseDown={e => selectPiece(e)} onMouseMove={e => movePeice(e)} onMouseUp={e => releasePiece(e)}>
             {board}
         </div>
     )

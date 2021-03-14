@@ -12,6 +12,18 @@ body{
   width: 800px;
   height: 800px;
 }
+.piece{
+  width: 100px;
+  height: 100px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.piece:hover{
+  cursor: grab;
+}
+.piece:active{
+  cursor: grabbing;
+}
 .tile{
   display: grid;
   place-content: center;
