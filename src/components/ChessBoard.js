@@ -3,7 +3,6 @@ import { Tile } from './Tile/Tile'
 
 const xAxis = ["a","b","c","d","e","f","g","h"]
 const yAxis = ["1","2","3","4","5","6","7","8"]
-
 const pieces = []
 
 for(let i = 0; i < 9; i++)
@@ -36,7 +35,7 @@ const selectPiece = e => {
     currentPiece = e.target
 }
 
-const movePeice = e => {
+const movePiece = e => {
     if(currentPiece && currentPiece.classList.contains("piece")){
         const x = e.clientX - 50
         const y = e.clientY - 50
@@ -66,7 +65,7 @@ export const ChessBoard = () => {
     }
     
     return(
-        <div className="board" onMouseDown={e => selectPiece(e)} onMouseMove={e => movePeice(e)} onMouseUp={e => releasePiece(e)}>
+        <div className="board" onMouseDown={e => selectPiece(e)} onMouseMove={e => movePiece(e)} onMouseUp={e => releasePiece(e)}>
             {board}
         </div>
     )
