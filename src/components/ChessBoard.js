@@ -37,7 +37,7 @@ const selectPiece = e => {
 }
 
 const movePeice = e => {
-    if(currentPiece){
+    if(currentPiece && currentPiece.classList.contains("piece")){
         const x = e.clientX - 50
         const y = e.clientY - 50
         currentPiece.style.position = "absolute"
