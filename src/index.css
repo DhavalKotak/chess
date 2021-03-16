@@ -7,6 +7,7 @@ body{
 }
 .board{
   display: grid;
+  place-content: center;
   grid-template-columns: repeat(8 ,100px);
   grid-template-rows: repeat(8, 100px);
   width: 800px;
@@ -36,8 +37,6 @@ body{
 }
 @media screen and (max-width: 992px){
   .board{
-    display: grid;
-    place-content: center;
     grid-template-columns: repeat(8 ,50px);
     grid-template-rows: repeat(8, 50px);
     width: 400px;
@@ -46,8 +45,6 @@ body{
   .piece{
     width: 50px;
     height: 50px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+    background-size: contain;
   }
 }
