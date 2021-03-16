@@ -27,8 +27,8 @@ export const ChessBoard = () => {
     const chessBoardRule = useRef(null)
     const selectPiece = e => {
         if(e.target.classList.contains("piece")){
-            const x = e.clientX - 50
-            const y = e.clientY - 50
+            const x = e.clientX - e.target.clientWidth/2
+            const y = e.clientY - e.target.clientHeight/2
             e.target.style.position = "absolute"
             e.target.style.top = `${y}px`
             e.target.style.left = `${x}px`
@@ -41,10 +41,10 @@ export const ChessBoard = () => {
         if(currentPiece && currentPiece.classList.contains("piece") && chessrule){
             const minWidth = chessrule.offsetLeft
             const minHeight = chessrule.offsetTop
-            const maxWidth = chessrule.clientWidth + chessrule.offsetLeft - 100
-            const maxHeight = chessrule.clientHeight + chessrule.offsetTop - 100
-            const x = e.clientX - 50
-            const y = e.clientY - 50
+            const maxWidth = chessrule.clientWidth + chessrule.offsetLeft - chessrule.clientWidth/8
+            const maxHeight = chessrule.clientHeight + chessrule.offsetTop - chessrule.clientHeight/8
+            const x = e.clientX - e.target.clientWidth/2
+            const y = e.clientY - e.target.clientHeight/2
             currentPiece.style.position = "absolute"
             if(x < minWidth)
                 currentPiece.style.left = `${minWidth}px`
@@ -62,7 +62,6 @@ export const ChessBoard = () => {
     }
     
     const releasePiece = e => {
-        console.log(e)
         if(currentPiece)
             currentPiece = null
     }
