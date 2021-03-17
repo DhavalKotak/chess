@@ -1,39 +1,46 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Tile } from './Tile/Tile'
 
 const xAxis = ["a","b","c","d","e","f","g","h"]
 const yAxis = ["1","2","3","4","5","6","7","8"]
-const pieces = []
-let currentPiece = null
+const initialBoard = []
 
 for(let i = 0; i < 9; i++)
-    pieces.push({image: "img/b-pawn.png" , x: i, y: 6})
+    initialBoard.push({image: "img/b-pawn.png" , x: i, y: 6})
 for(let i = 0; i < 9; i++)
-    pieces.push({image: "img/w-pawn.png" , x: i, y: 1})
+    initialBoard.push({image: "img/w-pawn.png" , x: i, y: 1})
 for(let i = 0; i < 2; i++){
     let color = (i === 0) ? "w" : "b"
     let y = (i === 0) ? 0 : 7
-    pieces.push({image: `img/${color}-king.png`, x: 4, y: y})
-    pieces.push({image: `img/${color}-queen.png`, x: 3, y: y})
-    pieces.push({image: `img/${color}-bishop.png`, x: 5, y: y})
-    pieces.push({image: `img/${color}-bishop.png`, x: 2, y: y})
-    pieces.push({image: `img/${color}-knight.png`, x: 6, y: y})
-    pieces.push({image: `img/${color}-knight.png`, x: 1, y: y})
-    pieces.push({image: `img/${color}-rook.png`, x: 7, y: y})
-    pieces.push({image: `img/${color}-rook.png`, x: 0, y: y})
+    initialBoard.push({image: `img/${color}-king.png`, x: 4, y: y})
+    initialBoard.push({image: `img/${color}-queen.png`, x: 3, y: y})
+    initialBoard.push({image: `img/${color}-bishop.png`, x: 5, y: y})
+    initialBoard.push({image: `img/${color}-bishop.png`, x: 2, y: y})
+    initialBoard.push({image: `img/${color}-knight.png`, x: 6, y: y})
+    initialBoard.push({image: `img/${color}-knight.png`, x: 1, y: y})
+    initialBoard.push({image: `img/${color}-rook.png`, x: 7, y: y})
+    initialBoard.push({image: `img/${color}-rook.png`, x: 0, y: y})
 }
 
 export const ChessBoard = () => {
+    const [currentPiece, setCurrentPiece] = useState(null)
+    const [boardX, setGridX] = useState(0)
+    const [boardY ,setGridY] = useState(0)
+    const [pieces, setPieces] = useState(initialBoard)
     const chessBoardRule = useRef(null)
+
     const selectPiece = e => {
-        if(e.target.classList.contains("piece")){
+        const chessrule = chessBoardRule.current
+        if(e.target.classList.contains("piece") && chessrule){
+            setGridX(Math.floor((e.clientX - chessrule.offsetLeft)/(chessrule.clientWidth/8)))
+            setGridY(Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - 800)/(chessrule.clientWidth/8))))
             const x = e.clientX - e.target.clientWidth/2
             const y = e.clientY - e.target.clientHeight/2
             e.target.style.position = "absolute"
             e.target.style.top = `${y}px`
             e.target.style.left = `${x}px`
         }
-        currentPiece = e.target
+        setCurrentPiece(e.target)
     }
     
     const movePiece = e => {
@@ -62,8 +69,23 @@ export const ChessBoard = () => {
     }
     
     const releasePiece = e => {
-        if(currentPiece)
-            currentPiece = null
+        const chessrule = chessBoardRule.current
+        if(currentPiece && chessrule){
+            const x = Math.floor((e.clientX - chessrule.offsetLeft)/(chessrule.clientWidth/8))
+            const y = Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - 800)/(chessrule.clientWidth/8)))
+            
+            setPieces(value => {
+                const pieces = value.map(p => {
+                    if (p.x === boardX && p.y === boardY) {
+                        p.x = x
+                        p.y = y      
+                    }
+                    return p
+                })
+                return pieces
+            })
+            setCurrentPiece(null)
+        }
     }
 
     const board = []
