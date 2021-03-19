@@ -1,25 +1,27 @@
 import React, { useRef, useState } from 'react'
 import { Tile } from './Tile/Tile'
+import Rules from './Rules'
+const rules = new Rules()
 
 const xAxis = ["a","b","c","d","e","f","g","h"]
 const yAxis = ["1","2","3","4","5","6","7","8"]
 const initialBoard = []
 
 for(let i = 0; i < 9; i++)
-    initialBoard.push({image: "img/b-pawn.png" , x: i, y: 6})
+    initialBoard.push({image: "img/b-pawn.png" , x: i, y: 6 ,type: "pawn", color: "b"})
 for(let i = 0; i < 9; i++)
-    initialBoard.push({image: "img/w-pawn.png" , x: i, y: 1})
+    initialBoard.push({image: "img/w-pawn.png" , x: i, y: 1,type: "pawn" , color: "w"})
 for(let i = 0; i < 2; i++){
     let color = (i === 0) ? "w" : "b"
     let y = (i === 0) ? 0 : 7
-    initialBoard.push({image: `img/${color}-king.png`, x: 4, y: y})
-    initialBoard.push({image: `img/${color}-queen.png`, x: 3, y: y})
-    initialBoard.push({image: `img/${color}-bishop.png`, x: 5, y: y})
-    initialBoard.push({image: `img/${color}-bishop.png`, x: 2, y: y})
-    initialBoard.push({image: `img/${color}-knight.png`, x: 6, y: y})
-    initialBoard.push({image: `img/${color}-knight.png`, x: 1, y: y})
-    initialBoard.push({image: `img/${color}-rook.png`, x: 7, y: y})
-    initialBoard.push({image: `img/${color}-rook.png`, x: 0, y: y})
+    initialBoard.push({image: `img/${color}-king.png`, x: 4, y: y, type: "king" , color})
+    initialBoard.push({image: `img/${color}-queen.png`, x: 3, y: y , type: "queen" , color})
+    initialBoard.push({image: `img/${color}-bishop.png`, x: 5, y: y, type: "bishop" , color})
+    initialBoard.push({image: `img/${color}-bishop.png`, x: 2, y: y, type: "bishop" , color})
+    initialBoard.push({image: `img/${color}-knight.png`, x: 6, y: y , type: "knight" , color})
+    initialBoard.push({image: `img/${color}-knight.png`, x: 1, y: y , type: "knight", color})
+    initialBoard.push({image: `img/${color}-rook.png`, x: 7, y: y , type: "rook" , color})
+    initialBoard.push({image: `img/${color}-rook.png`, x: 0, y: y , type: "rook" , color})
 }
 
 export const ChessBoard = () => {
@@ -73,12 +75,19 @@ export const ChessBoard = () => {
         if(currentPiece && chessrule){
             const x = Math.floor((e.clientX - chessrule.offsetLeft)/(chessrule.clientWidth/8))
             const y = Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - 800)/(chessrule.clientWidth/8)))
-            
+
             setPieces(value => {
                 const pieces = value.map(p => {
                     if (p.x === boardX && p.y === boardY) {
-                        p.x = x
-                        p.y = y      
+                        let valid = rules.validMove(boardX, boardY, x , y, p.type, p.color)
+                        if (valid) {
+                            p.x = x
+                            p.y = y    
+                        }else{
+                            currentPiece.style.position = "relative"
+                            currentPiece.style.top = 0
+                            currentPiece.style.left = 0
+                        }
                     }
                     return p
                 })
@@ -89,8 +98,8 @@ export const ChessBoard = () => {
     }
 
     const board = []
-    for(let j = yAxis.length - 1;j >= 0; j--){
-        for(let i = 0;i < xAxis.length; i++){
+    for(let j = yAxis.length - 1; j >= 0; j--){
+        for(let i = 0; i < xAxis.length; i++){
             const number = i + j + 2
             let imgUrl = undefined
             pieces.forEach(p => {
