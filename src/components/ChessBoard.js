@@ -79,7 +79,7 @@ export const ChessBoard = () => {
             setPieces(value => {
                 const pieces = value.map(p => {
                     if (p.x === boardX && p.y === boardY) {
-                        let valid = rules.validMove(boardX, boardY, x , y, p.type, p.color)
+                        let valid = rules.validMove(boardX, boardY, x , y, p.type, p.color, value)
                         if (valid) {
                             p.x = x
                             p.y = y    
