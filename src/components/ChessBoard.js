@@ -85,8 +85,8 @@ export const ChessBoard = () => {
                             p.y = y    
                         }else{
                             currentPiece.style.position = "relative"
-                            currentPiece.style.top = 0
-                            currentPiece.style.left = 0
+                            currentPiece.style.removeProperty("top")
+                            currentPiece.style.removeProperty("left")
                         }
                     }
                     return p
