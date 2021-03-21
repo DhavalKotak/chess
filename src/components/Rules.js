@@ -36,7 +36,7 @@ export default class Rules{
         }
 
         else if (type === "bishop") {
-            if ((prevX - x) === (prevY - y)) {
+            if (Math.abs(prevX - x) === Math.abs(prevY - y)) {
                 if(!this.isSquareOccupied(x , y , boardState))
                     return true
             }
@@ -64,7 +64,7 @@ export default class Rules{
         }
 
         else if(type === "queen"){
-            if((x - prevX) === (y - prevY)){
+            if(Math.abs(x - prevX) === Math.abs(y - prevY)){
                 if(!this.isSquareOccupied(x , y ,boardState))
                     return true
             }
