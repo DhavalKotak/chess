@@ -7,10 +7,6 @@ const xAxis = ["a","b","c","d","e","f","g","h"]
 const yAxis = ["1","2","3","4","5","6","7","8"]
 const initialBoard = []
 
-for(let i = 0; i < 9; i++)
-    initialBoard.push({image: "img/b-pawn.png" , x: i, y: 6 ,type: "pawn", color: "b"})
-for(let i = 0; i < 9; i++)
-    initialBoard.push({image: "img/w-pawn.png" , x: i, y: 1,type: "pawn" , color: "w"})
 for(let i = 0; i < 2; i++){
     let color = (i === 0) ? "w" : "b"
     let y = (i === 0) ? 0 : 7
@@ -23,6 +19,10 @@ for(let i = 0; i < 2; i++){
     initialBoard.push({image: `img/${color}-rook.png`, x: 7, y: y , type: "rook" , color})
     initialBoard.push({image: `img/${color}-rook.png`, x: 0, y: y , type: "rook" , color})
 }
+for(let i = 0; i < 9; i++)
+    initialBoard.push({image: "img/b-pawn.png" , x: i, y: 6 ,type: "pawn", color: "b"})
+for(let i = 0; i < 9; i++)
+    initialBoard.push({image: "img/w-pawn.png" , x: i, y: 1,type: "pawn" , color: "w"})
 
 export const ChessBoard = () => {
     const [currentPiece, setCurrentPiece] = useState(null)
@@ -75,24 +75,32 @@ export const ChessBoard = () => {
         if(currentPiece && chessrule){
             const x = Math.floor((e.clientX - chessrule.offsetLeft)/(chessrule.clientWidth/8))
             const y = Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - 800)/(chessrule.clientWidth/8)))
+            const playerPiece = pieces.find(p => p.x === boardX && p.y === boardY)
+            const opponentPiece = pieces.find(p => p.x === x && p.y === y)
 
-            setPieces(value => {
-                const pieces = value.map(p => {
-                    if (p.x === boardX && p.y === boardY) {
-                        let valid = rules.validMove(boardX, boardY, x , y, p.type, p.color, value)
-                        if (valid) {
-                            p.x = x
-                            p.y = y    
-                        }else{
-                            currentPiece.style.position = "relative"
-                            currentPiece.style.removeProperty("top")
-                            currentPiece.style.removeProperty("left")
+            
+            if(playerPiece){
+                const validMove = rules.validMove(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
+                
+                if (validMove) {
+
+                    const newPieces = pieces.reduce((result, piece) => {
+                        if (piece.y === playerPiece.y && piece.x === playerPiece.x) {
+                            piece.x = x
+                            piece.y = y
+                            result.push(piece)   
+                        }else if(!(piece.x === x && piece.y === y)){
+                            result.push(piece)
                         }
-                    }
-                    return p
-                })
-                return pieces
-            })
+                        return result
+                    },[])
+                    setPieces(newPieces)
+                }else{
+                    currentPiece.style.position = "relative"
+                    currentPiece.style.removeProperty("top")
+                    currentPiece.style.removeProperty("left")
+                }
+            }
             setCurrentPiece(null)
         }
     }
