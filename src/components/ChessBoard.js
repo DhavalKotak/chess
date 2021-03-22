@@ -77,7 +77,6 @@ export const ChessBoard = () => {
             const y = Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - 800)/(chessrule.clientWidth/8)))
             const playerPiece = pieces.find(p => p.x === boardX && p.y === boardY)
             const opponentPiece = pieces.find(p => p.x === x && p.y === y)
-
             
             if(playerPiece){
                 const validMove = rules.validMove(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
@@ -85,7 +84,7 @@ export const ChessBoard = () => {
                 if (validMove) {
 
                     const newPieces = pieces.reduce((result, piece) => {
-                        if (piece.y === playerPiece.y && piece.x === playerPiece.x) {
+                        if (piece.y === boardY && piece.x === boardX) {
                             piece.x = x
                             piece.y = y
                             result.push(piece)   

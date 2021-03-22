@@ -32,7 +32,6 @@ export default class Rules{
                 if(this.isOpponent(x , y , boardState , color))
                     return true
             }   
-
         }
 
         else if (type === "bishop") {
