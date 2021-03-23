@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react'
 import { Tile } from './Tile/Tile'
 import Rules from './Rules'
+import { io } from 'socket.io-client'
+const socket = io("http://localhost:4000")
 const rules = new Rules()
 
 const xAxis = ["a","b","c","d","e","f","g","h"]
@@ -25,12 +27,14 @@ for(let i = 0; i < 9; i++)
     initialBoard.push({image: "img/w-pawn.png" , x: i, y: 1,type: "pawn" , color: "w"})
 
 export const ChessBoard = () => {
+    socket.on('moved', newBoard => {
+        setPieces(newBoard)
+    })
     const [currentPiece, setCurrentPiece] = useState(null)
     const [boardX, setGridX] = useState(0)
     const [boardY ,setGridY] = useState(0)
     const [pieces, setPieces] = useState(initialBoard)
     const chessBoardRule = useRef(null)
-
     const selectPiece = e => {
         const chessrule = chessBoardRule.current
         if(e.target.classList.contains("piece") && chessrule){
@@ -94,6 +98,7 @@ export const ChessBoard = () => {
                         return result
                     },[])
                     setPieces(newPieces)
+                    socket.emit('move', newPieces)
                 }else{
                     currentPiece.style.position = "relative"
                     currentPiece.style.removeProperty("top")
