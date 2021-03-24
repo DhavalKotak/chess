@@ -7,6 +7,19 @@ export default class Rules{
             return false
     }
 
+    isEnPassant = (prevX, prevY, x, y, type, color, boardState) => {
+        if(type === "pawn"){
+            const direction = color === "w" ? 1 : -1
+            if((x - prevX === -1 || x - prevX === 1) && y - prevY === direction){
+                const piece = boardState.find(p => p.x === x && p.y === y - direction && p.enPassant)
+                if(piece)
+                    return true
+            }
+        }
+        return false
+
+    }
+
     isOpponent = (x , y , boardState, color) => {
         const piece = boardState.find(p => p.x === x && p.y === y && p.color !== color)
         if(piece)

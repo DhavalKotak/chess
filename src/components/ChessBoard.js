@@ -80,25 +80,47 @@ export const ChessBoard = () => {
             const x = Math.floor((e.clientX - chessrule.offsetLeft)/(chessrule.clientWidth/8))
             const y = Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - 800)/(chessrule.clientWidth/8)))
             const playerPiece = pieces.find(p => p.x === boardX && p.y === boardY)
-            const opponentPiece = pieces.find(p => p.x === x && p.y === y)
+            //const opponentPiece = pieces.find(p => p.x === x && p.y === y)
             
             if(playerPiece){
                 const validMove = rules.validMove(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
-                
-                if (validMove) {
-
+                const enPassant = rules.isEnPassant(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
+                const direction = playerPiece.color === "w" ? 1 : -1
+                if(enPassant){
                     const newPieces = pieces.reduce((result, piece) => {
-                        if (piece.y === boardY && piece.x === boardX) {
+                        if(piece.y === boardY && piece.x === boardX){
+                            piece.enPassant = false
                             piece.x = x
                             piece.y = y
-                            result.push(piece)   
-                        }else if(!(piece.x === x && piece.y === y)){
                             result.push(piece)
+                        }else if(!(piece.x === x && piece.y === y - direction)){
+                            if(piece.type === "pawn")
+                                    piece.enPassant = false
+                                result.push(piece)
                         }
                         return result
                     },[])
                     setPieces(newPieces)
                     socket.emit('move', newPieces)
+                }else if(validMove) {
+                        const newPieces = pieces.reduce((result, piece) => {
+                            if (piece.y === boardY && piece.x === boardX) {
+                                if(Math.abs(boardY - y) === 2 && piece.type === "pawn")
+                                    piece.enPassant = true
+                                else 
+                                    piece.enPassant = false
+                                piece.x = x
+                                piece.y = y
+                                result.push(piece)   
+                            }else if(!(piece.x === x && piece.y === y)){
+                                if(piece.type === "pawn")
+                                    piece.enPassant = false
+                                result.push(piece)
+                            }
+                            return result
+                        },[])
+                        setPieces(newPieces)
+                        socket.emit('move', newPieces)
                 }else{
                     currentPiece.style.position = "relative"
                     currentPiece.style.removeProperty("top")
