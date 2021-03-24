@@ -101,7 +101,9 @@ export const ChessBoard = () => {
                         return result
                     },[])
                     setPieces(newPieces)
-                    socket.emit('move', newPieces)
+                    let id = window.sessionStorage.getItem("gameId")
+                    console.log(id)
+                    socket.emit('move', id,newPieces)
                 }else if(validMove) {
                         const newPieces = pieces.reduce((result, piece) => {
                             if (piece.y === boardY && piece.x === boardX) {
@@ -120,7 +122,8 @@ export const ChessBoard = () => {
                             return result
                         },[])
                         setPieces(newPieces)
-                        socket.emit('move', newPieces)
+                        let id = window.sessionStorage.getItem("gameId")
+                        socket.emit('move', id,newPieces)
                 }else{
                     currentPiece.style.position = "relative"
                     currentPiece.style.removeProperty("top")
