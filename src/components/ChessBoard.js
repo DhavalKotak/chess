@@ -1,8 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { Tile } from './Tile/Tile'
 import Rules from './Rules'
-import { io } from 'socket.io-client'
-const socket = io("http://localhost:4000")
+import {socket} from './Socketio'
 const rules = new Rules()
 
 const xAxis = ["a","b","c","d","e","f","g","h"]
@@ -29,6 +28,7 @@ for(let i = 0; i < 9; i++)
 export const ChessBoard = () => {
     socket.on('moved', newBoard => {
         setPieces(newBoard)
+        console.log("boardupdated")
     })
     const [currentPiece, setCurrentPiece] = useState(null)
     const [boardX, setGridX] = useState(0)
@@ -101,9 +101,9 @@ export const ChessBoard = () => {
                         return result
                     },[])
                     setPieces(newPieces)
-                    let id = window.sessionStorage.getItem("gameId")
+                    const id = window.sessionStorage.getItem("gameId")
                     console.log(id)
-                    socket.emit('move', id,newPieces)
+                    socket.emit('move', id, newPieces)
                 }else if(validMove) {
                         const newPieces = pieces.reduce((result, piece) => {
                             if (piece.y === boardY && piece.x === boardX) {
@@ -122,7 +122,7 @@ export const ChessBoard = () => {
                             return result
                         },[])
                         setPieces(newPieces)
-                        let id = window.sessionStorage.getItem("gameId")
+                        const id = window.sessionStorage.getItem("gameId")
                         socket.emit('move', id,newPieces)
                 }else{
                     currentPiece.style.position = "relative"
