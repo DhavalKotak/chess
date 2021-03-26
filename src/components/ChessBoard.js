@@ -28,7 +28,6 @@ for(let i = 0; i < 9; i++)
 export const ChessBoard = () => {
     socket.on('moved', newBoard => {
         setPieces(newBoard)
-        console.log("boardupdated")
     })
     const [currentPiece, setCurrentPiece] = useState(null)
     const [boardX, setGridX] = useState(0)

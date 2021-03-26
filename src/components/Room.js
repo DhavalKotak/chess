@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import Jumbotron from 'react-bootstrap/Jumbotron'
 import { Link } from 'react-router-dom'
 import Button from 'react-bootstrap/Button'
-import {Socketio} from './Socketio'
-const socketio = new Socketio()
+import { joinRoom, createRoom,socket} from './Socketio'
 
 class Room extends Component{
     constructor(){
@@ -16,11 +15,14 @@ class Room extends Component{
         this.id = React.createRef(null)
     }
     create = () => {
-        const id = socketio.createRoom()
-        this.setState({gameId : id})
+        createRoom()
+        socket.on('generateId', gameId => {
+            this.setState({gameId: gameId})   
+        })
+        
     }
     join = () => {
-        const id = socketio.joinRoom(this.id.current.value)
+        const id = joinRoom(this.id.current.value)
         this.setState({gameId : id})
     }
     render(){
