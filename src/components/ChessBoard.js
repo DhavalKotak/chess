@@ -142,8 +142,11 @@ export const ChessBoard = () => {
     for(let j = yAxis.length - 1; j >= 0; j--){
         for(let i = 0; i < xAxis.length; i++){
             const number = i + j + 2
-            const piece = pieces.find(p => p.x === i && p.y ===j)
-            let imgUrl = piece ? piece.image : undefined
+            let imgUrl = undefined
+            pieces.forEach(p => {
+                if (p.x === i && p.y === j) 
+                    imgUrl = p.image
+            })
             board.push(<Tile number={number} key={xAxis[i]+yAxis[j]} image={imgUrl}/>)
         }
     }
