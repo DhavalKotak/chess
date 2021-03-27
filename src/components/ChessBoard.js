@@ -6,7 +6,6 @@ import Rules from './Rules'
 const rules = new Rules()
 const xAxis = ["a","b","c","d","e","f","g","h"]
 const yAxis = ["1","2","3","4","5","6","7","8"]
-let turn = 1
 
 const initialBoard = []
 for(let i = 0; i < 2; i++){
@@ -51,8 +50,7 @@ export const ChessBoard = () => {
     
     const movePiece = e => {
         const chessrule = chessBoardRule.current
-        if(currentPiece && currentPiece.classList.contains("piece") && chessrule && currentPiece.color === ((turn % 2) === 0 ? "w" : "b")){
-            turn ++
+        if(currentPiece && currentPiece.classList.contains("piece") && chessrule){
             const minWidth = chessrule.offsetLeft
             const minHeight = chessrule.offsetTop
             const maxWidth = chessrule.clientWidth + chessrule.offsetLeft - chessrule.clientWidth/8
@@ -82,7 +80,7 @@ export const ChessBoard = () => {
             const y = Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - 800)/(chessrule.clientWidth/8)))
             const playerPiece = pieces.find(p => p.x === boardX && p.y === boardY)
 
-            if(playerPiece && playerPiece.color === ((turn % 2) === 0 ? "w" : "b")){
+            if(playerPiece){
                 const validMove = rules.validMove(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
                 const enPassant = rules.isEnPassant(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
                 const direction = playerPiece.color === "w" ? 1 : -1
@@ -121,12 +119,9 @@ export const ChessBoard = () => {
                             }
                             return result
                         },[])
-                        if(playerPiece.color === turn % 2 === 0 ? "b" : "w"){
-                            setPieces(newPieces)
-                            turn++
-                            const id = window.sessionStorage.getItem("gameId")
-                            socket.emit('move', id,newPieces)
-                        }
+                        setPieces(newPieces)
+                        const id = window.sessionStorage.getItem("gameId")
+                        socket.emit('move', id,newPieces)
                         
                 }else{
                     currentPiece.style.position = "relative"
