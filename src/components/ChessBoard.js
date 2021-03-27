@@ -1,13 +1,14 @@
 import React, { useRef, useState } from 'react'
 import { Tile } from './Tile/Tile'
-import Rules from './Rules'
 import {socket} from './Socketio'
-const rules = new Rules()
+import Rules from './Rules'
 
+const rules = new Rules()
 const xAxis = ["a","b","c","d","e","f","g","h"]
 const yAxis = ["1","2","3","4","5","6","7","8"]
-const initialBoard = []
+let turn = 1
 
+const initialBoard = []
 for(let i = 0; i < 2; i++){
     let color = (i === 0) ? "w" : "b"
     let y = (i === 0) ? 0 : 7
@@ -26,7 +27,7 @@ for(let i = 0; i < 9; i++)
     initialBoard.push({image: "img/w-pawn.png" , x: i, y: 1,type: "pawn" , color: "w"})
 
 export const ChessBoard = () => {
-    socket.on('moved', newBoard => {
+    socket.on('updateBoard', newBoard => {
         setPieces(newBoard)
     })
     const [currentPiece, setCurrentPiece] = useState(null)
@@ -50,7 +51,8 @@ export const ChessBoard = () => {
     
     const movePiece = e => {
         const chessrule = chessBoardRule.current
-        if(currentPiece && currentPiece.classList.contains("piece") && chessrule){
+        if(currentPiece && currentPiece.classList.contains("piece") && chessrule && currentPiece.color === ((turn % 2) === 0 ? "w" : "b")){
+            turn ++
             const minWidth = chessrule.offsetLeft
             const minHeight = chessrule.offsetTop
             const maxWidth = chessrule.clientWidth + chessrule.offsetLeft - chessrule.clientWidth/8
@@ -79,15 +81,15 @@ export const ChessBoard = () => {
             const x = Math.floor((e.clientX - chessrule.offsetLeft)/(chessrule.clientWidth/8))
             const y = Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - 800)/(chessrule.clientWidth/8)))
             const playerPiece = pieces.find(p => p.x === boardX && p.y === boardY)
-            //const opponentPiece = pieces.find(p => p.x === x && p.y === y)
-            
-            if(playerPiece){
+
+            if(playerPiece && playerPiece.color === ((turn % 2) === 0 ? "w" : "b")){
                 const validMove = rules.validMove(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
                 const enPassant = rules.isEnPassant(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
                 const direction = playerPiece.color === "w" ? 1 : -1
+                
                 if(enPassant){
                     const newPieces = pieces.reduce((result, piece) => {
-                        if(piece.y === boardY && piece.x === boardX){
+                        if(piece.x === boardX && piece.y === boardY){
                             piece.enPassant = false
                             piece.x = x
                             piece.y = y
@@ -101,8 +103,7 @@ export const ChessBoard = () => {
                     },[])
                     setPieces(newPieces)
                     const id = window.sessionStorage.getItem("gameId")
-                    console.log(id)
-                    socket.emit('move', id, newPieces)
+                    socket.emit('move', id,newPieces)                        
                 }else if(validMove) {
                         const newPieces = pieces.reduce((result, piece) => {
                             if (piece.y === boardY && piece.x === boardX) {
@@ -120,9 +121,13 @@ export const ChessBoard = () => {
                             }
                             return result
                         },[])
-                        setPieces(newPieces)
-                        const id = window.sessionStorage.getItem("gameId")
-                        socket.emit('move', id,newPieces)
+                        if(playerPiece.color === turn % 2 === 0 ? "b" : "w"){
+                            setPieces(newPieces)
+                            turn++
+                            const id = window.sessionStorage.getItem("gameId")
+                            socket.emit('move', id,newPieces)
+                        }
+                        
                 }else{
                     currentPiece.style.position = "relative"
                     currentPiece.style.removeProperty("top")
@@ -137,12 +142,9 @@ export const ChessBoard = () => {
     for(let j = yAxis.length - 1; j >= 0; j--){
         for(let i = 0; i < xAxis.length; i++){
             const number = i + j + 2
-            let imgUrl = undefined
-            pieces.forEach(p => {
-                if (p.x === i && p.y === j) 
-                    imgUrl = p.image
-            })
-            board.push(<Tile number={number} key={xAxis[j]+yAxis[i]} image={imgUrl}/>)
+            const piece = pieces.find(p => p.x === i && p.y ===j)
+            let imgUrl = piece ? piece.image : undefined
+            board.push(<Tile number={number} key={xAxis[i]+yAxis[j]} image={imgUrl}/>)
         }
     }
     

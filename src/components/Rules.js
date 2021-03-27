@@ -51,12 +51,16 @@ export default class Rules{
             if (Math.abs(prevX - x) === Math.abs(prevY - y)) {
                 if(!this.isSquareOccupied(x , y , boardState))
                     return true
+                else if(this.isOpponent(x, y, boardState ,color))
+                    return true
             }
         }
 
         else if (type === "rook") {
             if ((prevX !== x && prevY === y) || (prevX === x && prevY !== y)) {
                 if(!this.isSquareOccupied(x , y, boardState))
+                    return true
+                else if(this.isOpponent(x, y, boardState ,color))
                     return true
             }
         }
@@ -66,10 +70,14 @@ export default class Rules{
                 if(prevY - y === 1 || prevY - y === -1){
                     if(!this.isSquareOccupied(x , y, boardState))
                         return true
+                    else if(this.isOpponent(x, y, boardState ,color))
+                        return true
                 }
             }else if (prevY - y === 2 || prevY - y === -2) {
                 if(prevX - x === 1 || prevX - x === -1){
                     if(!this.isSquareOccupied(x , y, boardState))
+                        return true
+                    else if(this.isOpponent(x, y, boardState ,color))
                         return true
                 }
             }
@@ -79,9 +87,13 @@ export default class Rules{
             if(Math.abs(x - prevX) === Math.abs(y - prevY)){
                 if(!this.isSquareOccupied(x , y ,boardState))
                     return true
+                else if(this.isOpponent(x, y, boardState ,color))
+                    return true
             }
             else if((prevX !== x && prevY === y) || (prevX === x && prevY !== y)) {
                 if(!this.isSquareOccupied(x , y, boardState))
+                    return true
+                else if(this.isOpponent(x, y, boardState ,color))
                     return true
             }
         }
@@ -90,9 +102,13 @@ export default class Rules{
             if(prevX - x === 1 || x - prevX === 1){
                 if(!this.isSquareOccupied(x , y, boardState))
                     return true
+                else if(this.isOpponent(x, y, boardState ,color))
+                    return true
             }
             if(prevY - y === 1 || y - prevY === 1){
                 if(!this.isSquareOccupied(x , y, boardState))
+                    return true
+                else if(this.isOpponent(x, y, boardState ,color))
                     return true
             }
         }

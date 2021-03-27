@@ -1,7 +1,7 @@
 import {io} from 'socket.io-client'
 export const socket = io("http://localhost:4000")
 
-socket.on('moved', board => {
+socket.on('updateBoard', board => {
     return board
 })
 
