@@ -34,7 +34,7 @@ class Room extends Component{
                         <Button variant="success" className="w-100" onClick={this.create}>Create Room</Button>
                     </h2>
                     <div>{this.state.gameId}</div>
-                    <Link to={this.state.gameId ? "/game" : "/chess"}>
+                    <Link to={this.state.gameId ? "/game" : "/"}>
                         <h2>
                             <Button variant="primary" className="w-100" onClick={this.join}>Join Room</Button>
                         </h2>

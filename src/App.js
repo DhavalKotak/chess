@@ -6,7 +6,7 @@ import Room from './components/Room'
 function App() {
   return (
     <div className="App">
-      <Router>
+      <Router basename={window.location.pathname || ''}>
         <Switch>
           <Route exact path="/" component={Room}/>
           <Route path="/game" component={ChessBoard}/>
