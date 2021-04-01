@@ -111,6 +111,10 @@ export const ChessBoard = () => {
                                     piece.enPassant = false
                                 piece.x = x
                                 piece.y = y
+                                if(piece.type === "pawn" && (piece.y === 0 || piece.y === 7)){
+                                    piece.type = "queen"
+                                    piece.image = `img/${piece.color}-queen.png`
+                                }
                                 result.push(piece)   
                             }else if(!(piece.x === x && piece.y === y)){
                                 if(piece.type === "pawn")
