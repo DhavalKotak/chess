@@ -1,4 +1,38 @@
 export default class Rules{
+
+    isAnyPieceBetween = (x, y, boardState, type, px, py) => {
+        
+        console.log("x:",x,"y:",y,"prevx:",px,"prevY:",py,"type:",type)
+        if(type === "rook"){
+            if(px - x > 0){ // left direction
+                for(let prevX = px-1; prevX > x; prevX--){
+                    const betweenPiece = boardState.find(p => p.x === prevX && p.y === y)
+                    if(betweenPiece)
+                        return true
+                }
+            }else if(px - x < 0){// right direction
+                for(let prevX = px+1; prevX < x; prevX++ ) {
+                    const betweenPiece = boardState.find(p => p.x === prevX && p.y === y)
+                    if(betweenPiece)
+                        return true
+                }
+            }
+            if(py - y > 0){ // down direction
+                for(let prevY = py-1; prevY > y; prevY--){
+                    const betweenPiece = boardState.find(p => p.y === prevY && p.x === x)
+                    if(betweenPiece)
+                        return true
+                }
+            }else if(py - y < 0){ // up direction
+                for(let prevY = py+1; prevY < y; prevY++ ) {
+                    const betweenPiece = boardState.find(p => p.y === prevY && p.x === x)
+                    if(betweenPiece)
+                        return true
+                }
+            }
+        }
+        return false
+    }
     isSquareOccupied = (x, y, boardState) => {
         const piece = boardState.find(p => p.x === x && p.y === y)
         if(piece)
@@ -58,10 +92,12 @@ export default class Rules{
 
         else if (type === "rook") {
             if ((prevX !== x && prevY === y) || (prevX === x && prevY !== y)) {
-                if(!this.isSquareOccupied(x , y, boardState))
-                    return true
-                else if(this.isOpponent(x, y, boardState ,color))
-                    return true
+                if(!this.isAnyPieceBetween(x, y, boardState, type, prevX, prevY)){
+                    if(!this.isSquareOccupied(x , y, boardState))                    
+                        return true
+                    else if(this.isOpponent(x, y, boardState ,color))
+                        return true
+                }
             }
         }
         
