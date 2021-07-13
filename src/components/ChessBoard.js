@@ -33,6 +33,7 @@ export const ChessBoard = () => {
     const [boardX, setGridX] = useState(0)
     const [boardY ,setGridY] = useState(0)
     const [pieces, setPieces] = useState(initialBoard)
+    const [turn, changeTurn] = useState("w")
     const chessBoardRule = useRef(null)
     const selectPiece = e => {
         const chessrule = chessBoardRule.current
@@ -79,13 +80,13 @@ export const ChessBoard = () => {
             const x = Math.floor((e.clientX - chessrule.offsetLeft)/(chessrule.clientWidth/8))
             const y = Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - 800)/(chessrule.clientWidth/8)))
             const playerPiece = pieces.find(p => p.x === boardX && p.y === boardY)
-
+            
             if(playerPiece){
                 const validMove = rules.validMove(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
                 const enPassant = rules.isEnPassant(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
                 const direction = playerPiece.color === "w" ? 1 : -1
                 
-                if(enPassant){
+                if(enPassant && playerPiece.color === turn){
                     const newPieces = pieces.reduce((result, piece) => {
                         if(piece.x === boardX && piece.y === boardY){
                             piece.enPassant = false
@@ -100,9 +101,10 @@ export const ChessBoard = () => {
                         return result
                     },[])
                     setPieces(newPieces)
+                    changeTurn((turn === "w") ? "b" : "w")
                     const id = window.sessionStorage.getItem("gameId")
                     socket.emit('move', id,newPieces)                        
-                }else if(validMove) {
+                }else if(validMove && playerPiece.color === turn) {
                         const newPieces = pieces.reduce((result, piece) => {
                             if (piece.y === boardY && piece.x === boardX) {
                                 if(Math.abs(boardY - y) === 2 && piece.type === "pawn")
@@ -124,6 +126,7 @@ export const ChessBoard = () => {
                             return result
                         },[])
                         setPieces(newPieces)
+                        changeTurn((turn === "w") ? "b" : "w")        
                         const id = window.sessionStorage.getItem("gameId")
                         socket.emit('move', id,newPieces)
                         
