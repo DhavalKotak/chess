@@ -3,7 +3,7 @@ export default class Rules{
     isAnyPieceBetween = (x, y, boardState, type, px, py) => {
         
         console.log("x:",x,"y:",y,"prevx:",px,"prevY:",py,"type:",type)
-        if(type === "rook"){
+        if(type === "rook" || type === "queen"){
             if(px - x > 0){ // left direction
                 for(let prevX = px-1; prevX > x; prevX--){
                     const betweenPiece = boardState.find(p => p.x === prevX && p.y === y)
@@ -127,10 +127,12 @@ export default class Rules{
                     return true
             }
             else if((prevX !== x && prevY === y) || (prevX === x && prevY !== y)) {
-                if(!this.isSquareOccupied(x , y, boardState))
-                    return true
-                else if(this.isOpponent(x, y, boardState ,color))
-                    return true
+                if(!this.isAnyPieceBetween(x, y, boardState, type, prevX, prevY)){
+                    if(!this.isSquareOccupied(x , y, boardState))                    
+                        return true
+                    else if(this.isOpponent(x, y, boardState ,color))
+                        return true
+                }
             }
         }
 
