@@ -30,10 +30,10 @@ body{
   place-content: center;
 }
 .white-tiles{
-  background-color: #60dafa;
+  background-color: #f0d9b5;
 }
 .black-tiles{
-  background-color: #4b7399;
+  background-color: #b58863;
 }
 @media screen and (max-height: 800px){
   .board{
