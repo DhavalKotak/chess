@@ -2,32 +2,65 @@ export default class Rules{
 
     isAnyPieceBetween = (x, y, boardState, type, px, py) => {
         
-        console.log("x:",x,"y:",y,"prevx:",px,"prevY:",py,"type:",type)
         if(type === "rook" || type === "queen"){
-            if(px - x > 0){ // left direction
+            if(px > x ){
                 for(let prevX = px-1; prevX > x; prevX--){
                     const betweenPiece = boardState.find(p => p.x === prevX && p.y === y)
                     if(betweenPiece)
                         return true
                 }
-            }else if(px - x < 0){// right direction
+            }else if(px < x ){
                 for(let prevX = px+1; prevX < x; prevX++ ) {
                     const betweenPiece = boardState.find(p => p.x === prevX && p.y === y)
                     if(betweenPiece)
                         return true
                 }
             }
-            if(py - y > 0){ // down direction
+            if(py > y ){ 
                 for(let prevY = py-1; prevY > y; prevY--){
                     const betweenPiece = boardState.find(p => p.y === prevY && p.x === x)
                     if(betweenPiece)
                         return true
                 }
-            }else if(py - y < 0){ // up direction
+            }else if(py < y ){ 
                 for(let prevY = py+1; prevY < y; prevY++ ) {
                     const betweenPiece = boardState.find(p => p.y === prevY && p.x === x)
                     if(betweenPiece)
                         return true
+                }
+            }
+        }else if(type === "bishop" || type === "queen"){
+            if(px > x && py > y){
+                for(let prevX = px - 1,prevY = py - 1;prevX > x && prevY > y; ){
+                    const betweenPiece = boardState.find(p => p.x === prevX && p.y === prevY)
+                    if(betweenPiece)
+                        return true
+                    prevX--
+                    prevY--
+                }
+            }else if(px < x && py > y){
+                for(let prevX = px + 1,prevY = py - 1;prevX < x && prevY > y; ){
+                    const betweenPiece = boardState.find(p => p.x === prevX && p.y === prevY)
+                    if(betweenPiece)
+                        return true
+                    prevX++
+                    prevY--
+                }
+            }else if(px > x && py < y){
+                for(let prevX = px - 1,prevY = py + 1;prevX > x && prevY < y; ){
+                    const betweenPiece = boardState.find(p => p.x === prevX && p.y === prevY)
+                    if(betweenPiece)
+                        return true
+                    prevX--
+                    prevY++
+                }
+            }else{
+                for(let prevX = px + 1,prevY = py + 1;prevX < x && prevY < y ;){
+                    const betweenPiece = boardState.find(p => p.x === prevX && p.y === prevY)
+                    if(betweenPiece)
+                        return true
+                    prevX++
+                    prevY++
                 }
             }
         }
@@ -51,7 +84,6 @@ export default class Rules{
             }
         }
         return false
-
     }
 
     isOpponent = (x , y , boardState, color) => {
@@ -83,10 +115,12 @@ export default class Rules{
 
         else if (type === "bishop") {
             if (Math.abs(prevX - x) === Math.abs(prevY - y)) {
-                if(!this.isSquareOccupied(x , y , boardState))
-                    return true
-                else if(this.isOpponent(x, y, boardState ,color))
-                    return true
+                if(!this.isAnyPieceBetween(x, y, boardState, type, prevX, prevY)){
+                    if(!this.isSquareOccupied(x , y , boardState))
+                        return true
+                    else if(this.isOpponent(x, y, boardState ,color))
+                        return true
+                }
             }
         }
 
@@ -121,10 +155,12 @@ export default class Rules{
 
         else if(type === "queen"){
             if(Math.abs(x - prevX) === Math.abs(y - prevY)){
-                if(!this.isSquareOccupied(x , y ,boardState))
-                    return true
-                else if(this.isOpponent(x, y, boardState ,color))
-                    return true
+                if(!this.isAnyPieceBetween(x, y, boardState, type, prevX, prevY)){
+                    if(!this.isSquareOccupied(x , y ,boardState))
+                        return true
+                    else if(this.isOpponent(x, y, boardState ,color))
+                        return true
+                }
             }
             else if((prevX !== x && prevY === y) || (prevX === x && prevY !== y)) {
                 if(!this.isAnyPieceBetween(x, y, boardState, type, prevX, prevY)){
