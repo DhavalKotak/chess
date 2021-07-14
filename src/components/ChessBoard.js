@@ -37,21 +37,23 @@ export const ChessBoard = () => {
     const chessBoardRule = useRef(null)
     const selectPiece = e => {
         const chessrule = chessBoardRule.current
-        if(e.target.classList.contains("piece") && chessrule){
+        if(e.target.classList.contains("piece") && chessrule && e.target.classList.contains(`${turn}`)){
             setGridX(Math.floor((e.clientX - chessrule.offsetLeft)/(chessrule.clientWidth/8)))
-            setGridY(Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - 800)/(chessrule.clientWidth/8))))
+            setGridY(Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - chessrule.clientWidth)/(chessrule.clientWidth/8))))
             const x = e.clientX - e.target.clientWidth/2
             const y = e.clientY - e.target.clientHeight/2
             e.target.style.position = "absolute"
             e.target.style.top = `${y}px`
             e.target.style.left = `${x}px`
+        }else{
+            releasePiece(e)
         }
         setCurrentPiece(e.target)
     }
     
     const movePiece = e => {
         const chessrule = chessBoardRule.current
-        if(currentPiece && currentPiece.classList.contains("piece") && chessrule){
+        if(currentPiece && currentPiece.classList.contains("piece") && chessrule && e.target.classList.contains(`${turn}`)){
             const minWidth = chessrule.offsetLeft
             const minHeight = chessrule.offsetTop
             const maxWidth = chessrule.clientWidth + chessrule.offsetLeft - chessrule.clientWidth/8
@@ -78,9 +80,8 @@ export const ChessBoard = () => {
         const chessrule = chessBoardRule.current
         if(currentPiece && chessrule){
             const x = Math.floor((e.clientX - chessrule.offsetLeft)/(chessrule.clientWidth/8))
-            const y = Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - 800)/(chessrule.clientWidth/8)))
+            const y = Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - chessrule.clientWidth)/(chessrule.clientWidth/8)))
             const playerPiece = pieces.find(p => p.x === boardX && p.y === boardY)
-            
             if(playerPiece){
                 const validMove = rules.validMove(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
                 const enPassant = rules.isEnPassant(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
@@ -144,12 +145,14 @@ export const ChessBoard = () => {
     for(let j = yAxis.length - 1; j >= 0; j--){
         for(let i = 0; i < xAxis.length; i++){
             const number = i + j + 2
-            let imgUrl = undefined
+            let imgUrl = undefined, color = ""
             pieces.forEach(p => {
-                if (p.x === i && p.y === j) 
+                if (p.x === i && p.y === j) {
                     imgUrl = p.image
+                    color = p.color
+                }      
             })
-            board.push(<Tile number={number} key={xAxis[i]+yAxis[j]} image={imgUrl}/>)
+            board.push(<Tile number={number} key={xAxis[i]+yAxis[j]} image={imgUrl} color={color}/>)
         }
     }
     
