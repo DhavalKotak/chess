@@ -1,6 +1,6 @@
 export default class Rules{
 
-    isAnyPieceBetween = (x, y, boardState, type, px, py) => {
+    isAnyPieceBetweenLinear = (x, y, boardState, type, px, py) => {
         
         if(type === "rook" || type === "queen"){
             if(px > x ){
@@ -29,7 +29,13 @@ export default class Rules{
                         return true
                 }
             }
-        }else if(type === "bishop" || type === "queen"){
+        } 
+        return false
+    }
+
+    isAnyPieceBetweenAccross = (x, y, boardState, type, px, py) => {
+        
+        if(type === "bishop" || type === "queen"){
             if(px > x && py > y){
                 for(let prevX = px - 1,prevY = py - 1;prevX > x && prevY > y; ){
                     const betweenPiece = boardState.find(p => p.x === prevX && p.y === prevY)
@@ -115,7 +121,7 @@ export default class Rules{
 
         else if (type === "bishop") {
             if (Math.abs(prevX - x) === Math.abs(prevY - y)) {
-                if(!this.isAnyPieceBetween(x, y, boardState, type, prevX, prevY)){
+                if(!this.isAnyPieceBetweenAccross(x, y, boardState, type, prevX, prevY)){
                     if(!this.isSquareOccupied(x , y , boardState))
                         return true
                     else if(this.isOpponent(x, y, boardState ,color))
@@ -126,7 +132,7 @@ export default class Rules{
 
         else if (type === "rook") {
             if ((prevX !== x && prevY === y) || (prevX === x && prevY !== y)) {
-                if(!this.isAnyPieceBetween(x, y, boardState, type, prevX, prevY)){
+                if(!this.isAnyPieceBetweenLinear(x, y, boardState, type, prevX, prevY)){
                     if(!this.isSquareOccupied(x , y, boardState))                    
                         return true
                     else if(this.isOpponent(x, y, boardState ,color))
@@ -155,7 +161,7 @@ export default class Rules{
 
         else if(type === "queen"){
             if(Math.abs(x - prevX) === Math.abs(y - prevY)){
-                if(!this.isAnyPieceBetween(x, y, boardState, type, prevX, prevY)){
+                if(!this.isAnyPieceBetweenAccross(x, y, boardState, type, prevX, prevY)){
                     if(!this.isSquareOccupied(x , y ,boardState))
                         return true
                     else if(this.isOpponent(x, y, boardState ,color))
@@ -163,7 +169,7 @@ export default class Rules{
                 }
             }
             else if((prevX !== x && prevY === y) || (prevX === x && prevY !== y)) {
-                if(!this.isAnyPieceBetween(x, y, boardState, type, prevX, prevY)){
+                if(!this.isAnyPieceBetweenLinear(x, y, boardState, type, prevX, prevY)){
                     if(!this.isSquareOccupied(x , y, boardState))                    
                         return true
                     else if(this.isOpponent(x, y, boardState ,color))
