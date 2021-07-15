@@ -28,6 +28,7 @@ for(let i = 0; i < 9; i++)
 export const ChessBoard = () => {
     socket.on('updateBoard', newBoard => {
         setPieces(newBoard)
+        changeTurn((turn === "w") ? "b" : "w")
     })
     const [currentPiece, setCurrentPiece] = useState(null)
     const [boardX, setGridX] = useState(0)
