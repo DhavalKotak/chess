@@ -179,17 +179,17 @@ export default class Rules{
         }
 
         else if(type === "king"){
-            if(prevX - x === 1 || x - prevX === 1){
-                if(!this.isSquareOccupied(x , y, boardState))
-                    return true
-                else if(this.isOpponent(x, y, boardState ,color))
-                    return true
-            }
-            if(prevY - y === 1 || y - prevY === 1){
-                if(!this.isSquareOccupied(x , y, boardState))
-                    return true
-                else if(this.isOpponent(x, y, boardState ,color))
-                    return true
+            if(prevX === x || prevY === y){
+                if(Math.abs((prevX + prevY) - (x + y)) < 2){
+                    if(!this.isSquareOccupied(x , y, boardState))
+                        return true
+                }
+            }else {
+                if(Math.abs((prevX + prevY) - (x + y)) <= 2){
+                    if(!this.isSquareOccupied(x , y, boardState))
+                        return true
+                    
+                }
             }
         }
         return false
