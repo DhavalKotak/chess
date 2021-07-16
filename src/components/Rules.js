@@ -100,7 +100,43 @@ export default class Rules{
             return false
     }
 
-    validMove = (prevX, prevY, x, y, type, color, boardState) => {
+    castling = (x, y, prevX, prevY, boardState, color, castle) => {
+        if(castle){
+            if(prevX === 4 && x === 6){
+                if((color === "w" && y === 0) || (color === "b" && prevY === 7)){
+                    let empty = true
+                    for(let i = prevX + 1; i < 7;i++){
+                        empty = this.isSquareOccupied(i,y,boardState)
+                        if(empty)
+                            break
+                    }
+                    if(!empty){
+                        let rook = boardState.find(p => p.x === 7 && p.y === y && p.type === "rook" && p.color === color)
+                        if(rook)
+                            return true
+                    }
+                }
+            }
+            if(prevX === 4 && x === 2){
+                if((color === "w" && prevY === 0) || (color === "b" && prevY === 7)){
+                    let empty = true
+                    for(let i = prevX - 1; i > 0;i--){
+                        empty = this.isSquareOccupied(i,y,boardState)
+                        if(empty)
+                            break
+                    }
+                    if(!empty){
+                        let rook = boardState.find(p => p.x === 0 && p.y === y && p.type === "rook" && p.color === color)
+                        if(rook)
+                            return true
+                    }
+                }
+            }
+        }
+        return false
+    }    
+
+    validMove = (prevX, prevY, x, y, type, color, boardState, piece) => {
         if (type === "pawn") {
             const firstRow = (color === "w") ? 1 : 6
             const direction = (color === "w") ? 1 : -1
@@ -181,14 +217,17 @@ export default class Rules{
         else if(type === "king"){
             if(prevX === x || prevY === y){
                 if(Math.abs((prevX + prevY) - (x + y)) < 2){
-                    if(!this.isSquareOccupied(x , y, boardState))
+                    if(!this.isSquareOccupied(x , y, boardState)){
+                        piece.castle = false
                         return true
+                    } 
                 }
             }else {
                 if(Math.abs((prevX + prevY) - (x + y)) <= 2){
-                    if(!this.isSquareOccupied(x , y, boardState))
+                    if(!this.isSquareOccupied(x , y, boardState)){
+                        piece.castle = false
                         return true
-                    
+                    }
                 }
             }
         }

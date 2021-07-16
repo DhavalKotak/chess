@@ -11,7 +11,7 @@ const initialBoard = []
 for(let i = 0; i < 2; i++){
     let color = (i === 0) ? "w" : "b"
     let y = (i === 0) ? 0 : 7
-    initialBoard.push({image: `img/${color}-king.png`, x: 4, y: y, type: "king" , color})
+    initialBoard.push({image: `img/${color}-king.png`, x: 4, y: y, type: "king" , color, castle: true})
     initialBoard.push({image: `img/${color}-queen.png`, x: 3, y: y , type: "queen" , color})
     initialBoard.push({image: `img/${color}-bishop.png`, x: 5, y: y, type: "bishop" , color})
     initialBoard.push({image: `img/${color}-bishop.png`, x: 2, y: y, type: "bishop" , color})
@@ -84,10 +84,11 @@ export const ChessBoard = () => {
             const y = Math.abs(Math.ceil((e.clientY - chessrule.offsetTop - chessrule.clientWidth)/(chessrule.clientWidth/8)))
             const playerPiece = pieces.find(p => p.x === boardX && p.y === boardY)
             if(playerPiece){
-                const validMove = rules.validMove(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
+                const validMove = rules.validMove(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces,playerPiece)
                 const enPassant = rules.isEnPassant(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
+                const castling = rules.castling(x, y, boardX,boardY, pieces, playerPiece.color, playerPiece.castle)
                 const direction = playerPiece.color === "w" ? 1 : -1
-                
+
                 if(enPassant && playerPiece.color === turn){
                     const newPieces = pieces.reduce((result, piece) => {
                         if(piece.x === boardX && piece.y === boardY){
@@ -132,6 +133,29 @@ export const ChessBoard = () => {
                         const id = window.sessionStorage.getItem("gameId")
                         socket.emit('move', id,newPieces)
                         
+                }else if(castling && playerPiece.color === turn){
+                        const newPieces = pieces.reduce((result, piece) => {
+                            if(piece.x === boardX && piece.y === boardY){
+                                piece.x = x
+                                piece.y = y
+                                piece.castle = false
+                                result.push(piece)
+                                if(piece.x === 6){
+                                    let rook = result.find(p => p.x === 7 && p.y === y)
+                                    rook.x = 5
+                                    result.push(rook)
+                                }else if(piece.x === 2 ){
+                                    let rook = result.find(p => p.x === 0 && p.y === y)
+                                    rook.x = 3
+                                    result.push(rook)
+                                }                                
+                            }
+                            return result
+                        },pieces)
+                        setPieces(newPieces)
+                        changeTurn((turn === "w") ? "b" : "w")
+                        const id = window.sessionStorage.getItem("gameId")
+                        socket.emit('move', id,newPieces)
                 }else{
                     currentPiece.style.position = "relative"
                     currentPiece.style.removeProperty("top")
