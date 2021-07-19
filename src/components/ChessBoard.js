@@ -20,9 +20,9 @@ for(let i = 0; i < 2; i++){
     initialBoard.push({image: `img/${color}-rook.png`, x: 7, y: y , type: "rook" , color})
     initialBoard.push({image: `img/${color}-rook.png`, x: 0, y: y , type: "rook" , color})
 }
-for(let i = 0; i < 9; i++)
+for(let i = 0; i < 8; i++)
     initialBoard.push({image: "img/b-pawn.png" , x: i, y: 6 ,type: "pawn", color: "b"})
-for(let i = 0; i < 9; i++)
+for(let i = 0; i < 8; i++)
     initialBoard.push({image: "img/w-pawn.png" , x: i, y: 1,type: "pawn" , color: "w"})
 
 export const ChessBoard = () => {
@@ -87,7 +87,6 @@ export const ChessBoard = () => {
                 const validMove = rules.validMove(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces,playerPiece)
                 const enPassant = rules.isEnPassant(boardX, boardY, x, y, playerPiece.type, playerPiece.color, pieces)
                 const castling = rules.castling(x, y, boardX,boardY, pieces, playerPiece.color, playerPiece.castle)
-                const direction = playerPiece.color === "w" ? 1 : -1
 
                 if(enPassant && playerPiece.color === turn){
                     const newPieces = pieces.reduce((result, piece) => {
@@ -96,7 +95,7 @@ export const ChessBoard = () => {
                             piece.x = x
                             piece.y = y
                             result.push(piece)
-                        }else if(!(piece.x === x && piece.y === y - direction)){
+                        }else if(!(piece.x === x && piece.y === y - 1)){
                             if(piece.type === "pawn")
                                     piece.enPassant = false
                                 result.push(piece)
@@ -110,13 +109,13 @@ export const ChessBoard = () => {
                 }else if(validMove && playerPiece.color === turn) {
                         const newPieces = pieces.reduce((result, piece) => {
                             if (piece.y === boardY && piece.x === boardX) {
-                                if(Math.abs(boardY - y) === 2 && piece.type === "pawn")
+                                if(boardY - y === -2 && piece.type === "pawn")
                                     piece.enPassant = true
                                 else 
                                     piece.enPassant = false
                                 piece.x = x
                                 piece.y = y
-                                if(piece.type === "pawn" && (piece.y === 0 || piece.y === 7)){
+                                if(piece.type === "pawn" &&  piece.y === 7){
                                     piece.type = "queen"
                                     piece.image = `img/${piece.color}-queen.png`
                                 }

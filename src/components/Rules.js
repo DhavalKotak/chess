@@ -82,9 +82,8 @@ export default class Rules{
 
     isEnPassant = (prevX, prevY, x, y, type, color, boardState) => {
         if(type === "pawn"){
-            const direction = color === "w" ? 1 : -1
-            if((x - prevX === -1 || x - prevX === 1) && y - prevY === direction){
-                const piece = boardState.find(p => p.x === x && p.y === y - direction && p.enPassant)
+            if((x - prevX === -1 || x - prevX === 1) && y - prevY === 1){
+                const piece = boardState.find(p => p.x === x && p.y === y - 1 && p.enPassant)
                 if(piece)
                     return true
             }
@@ -138,18 +137,16 @@ export default class Rules{
 
     validMove = (prevX, prevY, x, y, type, color, boardState, piece) => {
         if (type === "pawn") {
-            const firstRow = (color === "w") ? 1 : 6
-            const direction = (color === "w") ? 1 : -1
-            if(prevX === x && prevY === firstRow && y - prevY === 2 * direction){
-                if(!this.isSquareOccupied(x , y , boardState) && !this.isSquareOccupied(x , y - direction, boardState))
+            if(prevX === x && prevY === 1 && y - prevY === 2 ){
+                if(!this.isSquareOccupied(x , y , boardState) && !this.isSquareOccupied(x , y - 1, boardState))
                     return true
-            }else if(prevX === x && y - prevY === direction){
+            }else if(prevX === x && y - prevY === 1){
                 if(!this.isSquareOccupied(x , y , boardState))
                     return true
-            }else if(x - prevX === 1 && y - prevY === direction){
+            }else if(x - prevX === 1 && y - prevY === 1){
                 if(this.isOpponent(x , y , boardState , color))
                     return true
-            }else if(x - prevX === - 1 && y - prevY === direction){
+            }else if(x - prevX === - 1 && y - prevY === 1){
                 if(this.isOpponent(x , y , boardState , color))
                     return true
             }   
