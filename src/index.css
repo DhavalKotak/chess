@@ -35,7 +35,7 @@ body{
 .black-tiles{
   background-color: #b58863;
 }
-@media screen and (max-width: 992px){
+@media screen and (max-width: 992px),  screen and (max-height: 800px){
   .board{
     grid-template-columns: repeat(8 ,50px);
     grid-template-rows: repeat(8, 50px);
