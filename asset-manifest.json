@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/chess/static/css/main.52dfa705.chunk.css",
+    "main.css": "/chess/static/css/main.2439b461.chunk.css",
     "main.js": "/chess/static/js/main.eab8cd4d.chunk.js",
     "main.js.map": "/chess/static/js/main.eab8cd4d.chunk.js.map",
     "runtime-main.js": "/chess/static/js/runtime-main.a4dc0c5f.js",
@@ -10,13 +10,13 @@
     "static/js/3.7190b61a.chunk.js": "/chess/static/js/3.7190b61a.chunk.js",
     "static/js/3.7190b61a.chunk.js.map": "/chess/static/js/3.7190b61a.chunk.js.map",
     "index.html": "/chess/index.html",
-    "static/css/main.52dfa705.chunk.css.map": "/chess/static/css/main.52dfa705.chunk.css.map",
+    "static/css/main.2439b461.chunk.css.map": "/chess/static/css/main.2439b461.chunk.css.map",
     "static/js/2.f43e9ea4.chunk.js.LICENSE.txt": "/chess/static/js/2.f43e9ea4.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.a4dc0c5f.js",
     "static/js/2.f43e9ea4.chunk.js",
-    "static/css/main.52dfa705.chunk.css",
+    "static/css/main.2439b461.chunk.css",
     "static/js/main.eab8cd4d.chunk.js"
   ]
 }
