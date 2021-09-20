@@ -139,13 +139,19 @@ export const ChessBoard = () => {
                                 piece.y = y
                                 piece.castle = false
                                 result.push(piece)
-                                if(piece.x === 6){
+                                if(piece.x === 6 || piece.x === 5){
                                     let rook = result.find(p => p.x === 7 && p.y === y)
-                                    rook.x = 5
+                                    if(piece.color === "w")
+                                        rook.x = 5
+                                    else
+                                        rook.x = 4
                                     result.push(rook)
-                                }else if(piece.x === 2 ){
+                                }else if(piece.x === 2 || piece.x === 1){
                                     let rook = result.find(p => p.x === 0 && p.y === y)
-                                    rook.x = 3
+                                    if(piece.color === "w")
+                                        rook.x = 3
+                                    else 
+                                        rook.x = 2
                                     result.push(rook)
                                 }                                
                             }

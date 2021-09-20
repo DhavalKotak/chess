@@ -100,35 +100,31 @@ export default class Rules{
     }
 
     castling = (x, y, prevX, prevY, boardState, color, castle) => {
-        if(castle){
-            if(prevX === 4 && x === 6){
-                if((color === "w" && y === 0) || (color === "b" && prevY === 7)){
-                    let empty = true
-                    for(let i = prevX + 1; i < 7;i++){
-                        empty = this.isSquareOccupied(i,y,boardState)
-                        if(empty)
-                            break
-                    }
-                    if(!empty){
-                        let rook = boardState.find(p => p.x === 7 && p.y === y && p.type === "rook" && p.color === color)
-                        if(rook)
-                            return true
-                    }
+        if(castle && y === 0){
+            if((prevX === 4 && x === 6 && color === "w") || (prevX === 3 && x === 5 && color === "b")){
+                let empty = true
+                for(let i = prevX + 1; i < 7;i++){
+                    empty = this.isSquareOccupied(i,y,boardState)
+                    if(empty)
+                        break
+                }
+                if(!empty){
+                    let rook = boardState.find(p => p.x === 7 && p.y === y && p.type === "rook" && p.color === color)
+                    if(rook)
+                        return true
                 }
             }
-            if(prevX === 4 && x === 2){
-                if((color === "w" && prevY === 0) || (color === "b" && prevY === 7)){
-                    let empty = true
-                    for(let i = prevX - 1; i > 0;i--){
-                        empty = this.isSquareOccupied(i,y,boardState)
-                        if(empty)
-                            break
-                    }
-                    if(!empty){
-                        let rook = boardState.find(p => p.x === 0 && p.y === y && p.type === "rook" && p.color === color)
-                        if(rook)
-                            return true
-                    }
+            if((prevX === 4 && x === 2 && color === "w") || (prevX === 3 && x === 1 && color === "b")){
+                let empty = true
+                for(let i = prevX - 1; i > 0;i--){
+                    empty = this.isSquareOccupied(i,y,boardState)
+                    if(empty)
+                        break
+                }
+                if(!empty){
+                    let rook = boardState.find(p => p.x === 0 && p.y === y && p.type === "rook" && p.color === color)
+                    if(rook)
+                        return true
                 }
             }
         }
